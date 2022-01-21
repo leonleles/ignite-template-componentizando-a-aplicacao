@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack serve",
+    "dev": "webpack serve --port 8081",
     "server": "json-server server.json --port 3333",
     "build": "cross-env NODE_ENV=production webpack",
     "test": "jest --watchAll"
@@ -15,16 +15,19 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-feather": "^2.0.9",
-    "react-icons": "^4.2.0"
+    "react-icons": "^4.2.0",
+    "react-virtualized": "^9.22.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-typescript": "^7.12.7",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@types/react-dom": "^17.0.0",
+    "@types/react-virtualized": "^9.21.16",
     "babel-loader": "^8.2.2",
     "babel-preset-react-app": "^10.0.0",
     "cross-env": "^7.0.3",

@@ -1,11 +1,7 @@
-import { useEffect, useState, useContext } from 'react';
-
-import { MovieCard } from '../components/MovieCard';
-
-import MoviesContext from '../contexts/MoviesContext';
-
-import { api } from '../services/api';
-
+import { useContext } from "react";
+import { List, ListRowRenderer } from "react-virtualized";
+import { MovieCard } from "../components/MovieCard";
+import MoviesContext from "../contexts/MoviesContext";
 interface MovieProps {
   Title: string;
   Poster: string;
@@ -15,39 +11,47 @@ interface MovieProps {
   }>;
   Runtime: string;
 }
-
-interface GenreResponseProps {
-  id: number;
-  name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
-  title: string;
+interface ContentProps {
+  movies: Array<MovieProps>;
 }
 
-export function Content() {
-  const [movies, setMovies] = useState<MovieProps[]>([]);
+export function Content({ movies }: ContentProps) {
+  const { selectedGenre } = useContext(MoviesContext);
 
-  const {selectedGenreId, setSelectedGenre, selectedGenre} = useContext(MoviesContext);
+  const rowRenderer: ListRowRenderer = ({ index, key, style }) => {
+    const movie = movies[index];
 
-  useEffect(() => {
-    api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`).then(response => {
-      setMovies(response.data);
-    });
-
-    api.get<GenreResponseProps>(`genres/${selectedGenreId}`).then(response => {
-      setSelectedGenre(response.data);
-    })
-  }, [selectedGenreId]);
+    return (
+      <div key={key} style={style}>
+        <MovieCard
+          title={movie.Title}
+          poster={movie.Poster}
+          runtime={movie.Runtime}
+          rating={movie.Ratings[0].Value}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="container">
       <header>
-        <span className="category">Categoria:<span> {selectedGenre.title}</span></span>
+        <span className="category">
+          Categoria:<span> {selectedGenre.title}</span>
+        </span>
       </header>
 
       <main>
         <div className="movies-list">
-          {movies.map(movie => (
-            <MovieCard title={movie.Title} poster={movie.Poster} runtime={movie.Runtime} rating={movie.Ratings[0].Value} />
-          ))}
+          <List
+            height={680}
+            rowHeight={347}
+            width={900}
+            overscanRowCount={3}
+            // autoWidth={true}
+            rowCount={movies.length}
+            rowRenderer={rowRenderer}
+          />
         </div>
       </main>
     </div>
